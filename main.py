@@ -1,63 +1,9 @@
-from typing import TypedDict, Optional, Required, NotRequired, Literal
-from pydantic import TypeAdapter
-
 """
 This is a student managment program
 """
 
-# Student schema, this defines how the student_profiles is to be structured
-StudentSchema: TypedDict = TypedDict("StudentSchema", {
-    "name": str,
-    "matric": str,
-    "age": int,
-    "cgpa": float,
-    "is_active": bool,
-    "courses": list[str],
-    "departmentInfo": tuple[str, str, int]
-})
-
-type gradeType = Literal['A', 'B', 'C', 'D', 'F']
-
-ResultSchema: TypedDict = TypedDict("ResultSchema", {
-    "matric": Required[Optional[str]], # could be of type str or None
-    "courses": Required[list[str]],
-    "scores": Required[list[int]],
-    "grades": NotRequired[list[gradeType]]
-})
-
-type StudentProfilesSchema = list[StudentSchema]
-type StudentResultsSchema = list[ResultSchema]
-
-# Data of the students
-courses: list[str] = ["ELE311", "ELE321", "ELE331", "ELE361"]
-student_names: list[str] = []
-
-student_profiles: list[StudentSchema] = [
-    {
-        "name": "John",
-        "matric": "20/60AC223",
-        "age": 38,
-        "cgpa": 3.2,
-        "is_active": True,
-        "courses": courses,
-        "departmentInfo": ("Electrical/Electronics", "Faculty of Engineering", 2025)
-    }
-]
-
-student_results: list[ResultSchema] = [
-    {
-        "matric": "20/60AC223",
-        "courses": courses,
-        "scores": [10, 30, 53, 87]
-    }
-]
-
-student_validator: TypeAdapter = TypeAdapter(StudentProfilesSchema)
-student_profiles: list[StudentSchema] = student_validator.validate_python(student_profiles)
-
-result_validator: TypeAdapter = TypeAdapter(StudentResultsSchema)
-student_results: list[ResultSchema] = result_validator.validate_python(student_results)
-
+from typing import Optional, Required, NotRequired, Literal
+from database import *
 
 def gradestudent(studentprofile: StudentSchema) -> list[gradeType]:
     """ This takes a student profile and grades the student based on the score """
@@ -92,5 +38,42 @@ def getfeedback(grade: gradeType) -> str:
 for profile in student_profiles:
     for result in student_results:
         if result['matric'] == profile['matric']: result['grade'] = gradestudent(profile)
-print(student_results)
 
+def addstudent() -> StudentSchema | None:
+    """ This adds a student to the student_profiles table/database """
+    student: StudentSchema = dict()
+    name: str = input("Enter your name: ")
+    matric: str = input("Enter your matric no: ")
+
+    try:
+        age: int = int(input("Enter your age (16 - 40): "))
+        if not age >= 16 and age <= 40: 
+            print("Age must be between 16 and 40")
+    except Exception as e:
+        print(e)
+
+    try: 
+        cgpa: float = float(input("Enter you CGPA (0.0 - 5.0): "))
+        if not cgpa >= 0.0 and cgpa <= 5.0: 
+            print("CGPA must be between 0.0 and 5.0")
+    except Exception as e:
+        print(e)
+
+    department: str = input("Enter your department: ")
+    faculty: str = input("Enter your faculty: ")
+    year: int = int(input("Enter your year of admission: "))
+
+    student['name'] = name
+    student['age'] = age
+    student['matric'] = matric
+    student['is_active'] = True
+    student['courses'] = courses
+    student['departmentInfo'] = (department, faculty, year)
+
+    return student
+
+def main() -> None:
+    print(addstudent())
+
+if __name__ == '__main__': 
+    main()

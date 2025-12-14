@@ -42,7 +42,7 @@ student_profiles: list[StudentSchema] = [
         "name": "Woods",
         "matric": "20/89AC098",
         "age": 38,
-        "cgpa": 3.2,
+        "cgpa": 2.1,
         "is_active": True,
         "courses": courses,
         "departmentInfo": ("Electrical/Electronics", "Faculty of Engineering", 2025)
@@ -60,7 +60,7 @@ student_profiles: list[StudentSchema] = [
         "name": "Mike",
         "matric": "20/60AC076",
         "age": 25,
-        "cgpa": 3.2,
+        "cgpa": 3.5,
         "is_active": True,
         "courses": courses,
         "departmentInfo": ("Electrical/Electronics", "Faculty of Engineering", 2025)

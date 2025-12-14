@@ -2,7 +2,6 @@
 This is a student managment program
 """
 
-from typing import Optional, Required, NotRequired, Literal
 from database import *
 import re
 
@@ -106,6 +105,7 @@ def checkeligibility(studentprofile: StudentSchema) -> bool:
     return False
 
 def gettopperformer() -> StudentSchema | None:
+    """ This gets the top performing student by getting which of the student has the highest cgpa and it retuns that student """
     cgpa: float = student_profiles[0]['cgpa'] 
     student_index: float = 0
     for index, student in enumerate(student_profiles): 

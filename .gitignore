@@ -5,4 +5,10 @@ Scripts/
 .main.py.swp
 .database.py.swp
 .gitignore.swp
+README.md~
+.README.md.un~
+main.py~
+main.py.un~
+..gitignore.un~
+.gitignore~
 __pycache__/

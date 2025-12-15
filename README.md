@@ -9,8 +9,6 @@ This a school project that simulates a student mangement system using a simulate
 #### Windows
 ```text
 cd %USERPROFILE%
-mkdir github-files
-cd github-files
 git clone https://github.com/tappyuser/student-management-system.git
 pip install -r requirements.txt
 ```
@@ -18,8 +16,6 @@ pip install -r requirements.txt
 #### Linux
 ```text
 cd ~/
-mkdir github-files
-cd github-files
 git clone https://github.com/tappyuser/student-management-system.git
 pip install -r requirements.txt
 ```

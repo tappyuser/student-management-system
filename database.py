@@ -95,7 +95,7 @@ student_results: list[ResultSchema] = [
     {
         "matric": "20/60AC122",
         "courses": courses,
-        "scores": [40, 89, 77, 32]
+        "scores": [90, 89, 77, 32]
     },
     {
         "matric": "20/60AC076",

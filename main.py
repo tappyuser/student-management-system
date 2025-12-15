@@ -35,11 +35,6 @@ def getfeedback(grade: gradeType) -> str:
         case 'D': return 'Fair'
     return 'Poor'
 
-#for profile in student_profiles:
-#    for studentprofile in student_profiles:
-#    for result in student_results:
-#       if result['matric'] == profile['matric']: result['grade'] = gradestudent(profile)
-
 def setstudentresult(studentprofile: StudentSchema) -> ResultSchema | None:
     """ This takes a studentprofile. Gets the result by allowing getting user input and then returns a ResultSchema """
     result: ResultSchema = dict()
@@ -90,7 +85,14 @@ def addstudent() -> StudentSchema | None:
 
     return student
 
+def getstudentfrommatric(matric: str) -> StudentSchema | None:
+    """ This function takes a matric no and returns the student profile """
+    for student in student_profiles:
+        if student['matric'] == matric: return student
+    return None
+
 def getresult(studentprofile: StudentSchema) -> ResultSchema | None:
+    """ For a specific student profile, this function gets the corresponding result of that student """
     for result in student_results:
         if result['matric'] == studentprofile['matric']:
             return result
@@ -100,7 +102,7 @@ def checkeligibility(studentprofile: StudentSchema) -> bool:
     for key, value in studentprofile.items():
         print(key.upper() + ': ', value)
 
-    if studentprofile['cgpa'] >= 4.5:
+    if studentprofile['cgpa'] >= 2.5:
         return True
     return False
 
@@ -114,6 +116,19 @@ def gettopperformer() -> StudentSchema | None:
             cgpa = current_cgpa
             student_index = index
     return student_profiles[student_index]
+
+def getassignmentscores(studentprofile: StudentSchema) -> tuple[list[int], list[int], list[int]] | None:
+    result: ResultSchema = getresult(studentprofile)
+    if not result: # Makes sure that the getresult function does not return none. Meaning that the result exists in the student_result object
+        print("The student does not exist")
+        return None
+    
+    result = sorted(result['scores']) # Sorts the student result
+    top_three_scores: list[int] = result[2:] # Gets the top three scores of the scores
+    last_five_scores: list[int] = result[-5:] if len(result) > 5 else result # Gets the last five scores of the scores if the length of the scores is greater than five
+    every_other_score: list[int] = result[:len(result):2] # Gets the scores by stepping by two for every score
+
+    return top_three_scores, last_five_scores, every_other_score
 
 def main() -> None:
     print(f"""
@@ -129,7 +144,9 @@ Loading student records
     2. Add new student
     3. Check eligibility for graduation
     4. Find top performer
-    5. Exit
+    5. Analysis and Report of all students
+    6. Set operation on the students
+    7. Exit
 ------------------------------------------------
           """)
 
@@ -166,6 +183,41 @@ Loading student records
                 print(f'{student["name"]} is the top performer')
 
             case 5:
+                for student in student_profiles:
+                    scores: tuple[list[int], ...] = getassignmentscores(student)
+                    print(f"Student Name: {student['name']}")
+                    print(f"Top three scores: {scores[0]}")
+                    print(f"Last five scores: {scores[1]}")
+                    print(f"Every other score: {scores[2]}\n\n")
+
+            case 6:
+                index_of_course: int = courses.index("ELE311")
+                set_merit: set[StudentSchema] = set()
+                set_pass: set[StudentSchema] = set()
+                pass_intersect_merit: set[StudentSchema] = set()
+                pass_union_merit: set[StudentSchema] = set()
+                pass_diff_merit: set[StudentSchema] = set()
+
+                for student in student_profiles:
+                    result: ResultSchema = getresult(student) # Gets the student result
+                    result['grades'] = gradestudent(student)
+                    if result['grades'][index_of_course] == 'A': set_pass.add(student['matric']) # Adds the student to the list of the student that pass
+                    if student['cgpa'] >= 2.5: set_merit.add(student['matric'])
+                    
+                pass_intersect_merit = set_merit.intersection(set_pass)
+                pass_union_merit = set_merit.union(set_pass)
+                pass_diff_merit = set_pass.symmetric_difference(set_merit)
+                
+                print("Intersection")
+                for intersection in pass_intersect_merit: print(f"{getstudentfrommatric(intersection)['name']}")
+
+                print("\n\nUnion")
+                for union in pass_intersect_merit: print(f"{getstudentfrommatric(union)['name']}")
+
+                print("\n\nDifference")
+                for diff in pass_intersect_merit: print(f"{getstudentfrommatric(diff)['name']}")
+                    
+            case 7:
                 break
 
 

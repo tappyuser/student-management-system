@@ -10,6 +10,7 @@ This a school project that simulates a student mangement system using a simulate
 ```text
 cd %USERPROFILE%
 git clone https://github.com/tappyuser/student-management-system.git
+cd student-management-system
 pip install -r requirements.txt
 ```
 
@@ -17,6 +18,7 @@ pip install -r requirements.txt
 ```text
 cd ~/
 git clone https://github.com/tappyuser/student-management-system.git
+cd student-management-system
 pip install -r requirements.txt
 ```
 
